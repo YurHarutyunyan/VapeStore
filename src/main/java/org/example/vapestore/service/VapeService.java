@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Service
 public class VapeService implements VapeServiceInterface {
@@ -39,5 +41,26 @@ public class VapeService implements VapeServiceInterface {
         quantity--;
         vape.setQuantity(quantity);
         repository.save(vape);
+    }
+
+    public Boolean deleteVapeById(Long id) {
+        repository.deleteById(id);
+        return true;
+    }
+
+    @Override
+    public Boolean findVapeById(Long id) {
+        return repository.existsById(id);
+    }
+
+    public List<Vape> searchingMechanism(String name, Double minPrice, Double maxPrice) {
+        List<Vape> searchedVapes = new ArrayList<>();
+        List<Vape> vapes = new ArrayList<>();
+        repository.findAll().forEach(vapes::add);
+        searchedVapes = vapes.stream()
+                .filter(vape -> vape != null && vape.getPrice() >= minPrice && vape.getPrice() <= maxPrice && vape.getName().equals(name)
+                ).collect
+                        (Collectors.toList());
+        return searchedVapes;
     }
 }

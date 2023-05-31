@@ -13,7 +13,7 @@ public class Vape {
     private Integer puffCount;
 
     @Column
-    private Integer price;
+    private Double price;
 
     @Column
     private Integer quantity;
@@ -22,7 +22,7 @@ public class Vape {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "vapeSeq")
     Long vapeId;
 
-    public Vape(String name, Integer puffCount, Integer price, Long vapeId, Integer quantity) {
+    public Vape(String name, Integer puffCount, Double price, Long vapeId, Integer quantity) {
         this.name = name;
         this.puffCount = puffCount;
         this.price = price;
@@ -33,11 +33,16 @@ public class Vape {
     public Vape() {
     }
 
-    public Vape(String name, Integer puffCount, Integer quantity, Integer price) {
+    public Vape(String name, Integer puffCount, Integer quantity, Double price) {
         this.name = name;
         this.puffCount = puffCount;
         this.price = price;
         this.quantity = quantity;
+    }
+    public Vape(String name, Integer puffCount, Double price){
+        this.name=name;
+        this.quantity=quantity;
+        this.price=price;
     }
 
     public String getName() {
@@ -64,11 +69,11 @@ public class Vape {
         this.puffCount = puffCount;
     }
 
-    public Integer getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 

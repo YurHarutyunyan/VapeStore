@@ -6,16 +6,13 @@ import org.example.vapestore.service.VapeService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping(value = "/VapeStore")
-public class Controller {
+public class Controller<T> {
     private final VapeService vapeService;
 
     public Controller(VapeService service) {
@@ -28,8 +25,9 @@ public class Controller {
         HttpHeaders headers = new HttpHeaders();
         headers.add("ContentType", "text/plain");
         ResponseEntity<Vape> response = new ResponseEntity<>(vape, headers, status);
-        vapeService.addVape(vape);
-        return response;
+        if (!viewVapes().getBody().contains(vape))
+            vapeService.addVape(vape);
+        return null;
     }
 
     @RequestMapping(value = "/viewVapes")
@@ -55,10 +53,52 @@ public class Controller {
             return "Nice choice";
         }
     }
+
+    @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
+    public ResponseEntity<String> update(@PathVariable Long id, Vape changedVape) {
+        changedVape.setVapeId(id);
+        vapeService.addVape(changedVape);
+        return ResponseEntity.ok("Vape details updated successfully");
+    }
+
+    @RequestMapping(value = "/deleteVape/{id}", method = RequestMethod.POST)
+    public String deleteVape(@PathVariable Long id) {
+        if (vapeService.findVapeById(id)) {
+            vapeService.deleteVapeById(id);
+            return "deletion completed";
+        } else {
+            return "there is no vape with that id, sorry";
+        }
+    }
+
+    @PostMapping(value = "/search")
+    public ResponseEntity<List<Vape>> searchVapes(@RequestBody(required = false) Data data) {
+        List<Vape> searchedVapes = vapeService.searchingMechanism(data.getName(), data.getMinPrice(), data.getMaxPrice());
+        return ResponseEntity.ok(searchedVapes);
+    }
 }
+
 
 class Data {
     private String name;
+    private Double minPrice;
+    private Double maxPrice;
+
+    public Double getMinPrice() {
+        return minPrice;
+    }
+
+    public void setMinPrice(Double minPrice) {
+        this.minPrice = minPrice;
+    }
+
+    public Double getMaxPrice() {
+        return maxPrice;
+    }
+
+    public void setMaxPrice(Double maxPrice) {
+        this.maxPrice = maxPrice;
+    }
 
     public String getName() {
         return name;

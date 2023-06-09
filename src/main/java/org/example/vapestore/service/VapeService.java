@@ -1,5 +1,5 @@
 package org.example.vapestore.service;
-
+import org.example.vapestore.repository.VapeRepository;
 import org.example.vapestore.model.Vape;
 import org.example.vapestore.repository.VapeRepository;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,8 @@ public class VapeService implements VapeServiceInterface {
     @Override
     public Integer getVapeQuantityByName(String name) {
         Vape vape = repository.findVapeByName(name);
-        Integer q = vape.getQuantity();
+        Integer q=0;
+        q= vape.getQuantity();
         return q;
     }
 
@@ -54,13 +55,17 @@ public class VapeService implements VapeServiceInterface {
     }
 
     public List<Vape> searchingMechanism(String name, Double minPrice, Double maxPrice) {
-        List<Vape> searchedVapes = new ArrayList<>();
         List<Vape> vapes = new ArrayList<>();
         repository.findAll().forEach(vapes::add);
-        searchedVapes = vapes.stream()
-                .filter(vape -> vape != null && vape.getPrice() >= minPrice && vape.getPrice() <= maxPrice && vape.getName().equals(name)
-                ).collect
-                        (Collectors.toList());
+        List<Vape>searchedVapes = vapes.stream()
+                .filter(vape -> {
+                    boolean nameMatch = name == null || name.equals(vape.getName());
+                    boolean priceMatch = (minPrice == null || vape.getPrice() >= minPrice)
+                            && (maxPrice == null || vape.getPrice() <= maxPrice);
+                    return nameMatch && priceMatch;
+                })
+                .collect(Collectors.toList());
+
         return searchedVapes;
     }
 }

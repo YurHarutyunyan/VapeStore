@@ -1,8 +1,12 @@
 package org.example.vapestore.model;
 
-import javax.persistence.*;
 
-@Table(name = "vape")
+
+import jakarta.persistence.*;
+import org.hibernate.annotations.Table;
+
+
+@Table(appliesTo = "vape")
 @Entity
 public class Vape {
 

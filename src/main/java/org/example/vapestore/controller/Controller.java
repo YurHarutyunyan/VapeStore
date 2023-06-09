@@ -6,13 +6,14 @@ import org.example.vapestore.service.VapeService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping(value = "/VapeStore")
-public class Controller<T> {
+public class Controller {
     private final VapeService vapeService;
 
     public Controller(VapeService service) {
@@ -76,6 +77,12 @@ public class Controller<T> {
         List<Vape> searchedVapes = vapeService.searchingMechanism(data.getName(), data.getMinPrice(), data.getMaxPrice());
         return ResponseEntity.ok(searchedVapes);
     }
+
+    @GetMapping("/user")
+    public String user( Authentication authentication) {
+        return "<h1>Welcome" + authentication.getName() + authentication.getAuthorities()+"!</h1>";
+    }
+
 }
 
 

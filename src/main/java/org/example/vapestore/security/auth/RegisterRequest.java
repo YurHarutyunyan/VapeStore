@@ -4,14 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.vapestore.security.user.Role;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class RegisterRequest {
-    private String firstname;
-    private String lastname;
-    private String username;
-    private String password;
+
+  private String firstname;
+  private String lastname;
+  private String email;
+  private String password;
+  private Role role;
 }
